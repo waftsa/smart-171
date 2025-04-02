@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.opacity-100 { opacity: 1 !important; }
+.opacity-0 { opacity: 0 !important; }
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+
+nav {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: transparent;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.nav-scrolled {
+    position: fixed !important;
+    backdrop-filter: blur(5px) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.nav-scrolled a,
+.nav-scrolled .menu-item, 
+.nav-scrolled .button{
+    color: white !important;
+}
+
+.nav-scrolled a:hover,
+.nav-scrolled .menu-item:hover {
+    color: #e16976 !important; /* Warna merah saat hover */
+}
+
+
+
+/* Hover and Active Colors */
+nav a:hover, .menu-item:hover {
+    color: #e16976 !important;
+    border-bottom: 2px solid #e16976 !important;
+}
+
+nav a.active, .menu-item.active {
+    color: white !important; /* Biru */
+    font-weight: bold; /* Teks tebal */
+    border-bottom: 2px solid white !important; /* Garis biru */
+}
+
+nav a.active:hover, .menu-item.active:hover {
+    color: white !important;
+    border-bottom: 2px solid white !important;
+}
+
+/* Dropdown menu styling */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 50;
+    display: none;
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 8px 0;
+    color : #1D4161;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    padding: 8px 16px;
+    display: block;
+    color: #1D4161;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f5f9;
+    color: #e16976;
+}
+
+/* Sticky Navbar */
+.sticky {
+    position: sticky;
+    top: 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bg-transparent {
+    background-color: transparent;
+}
+
+.bg-white-opacity-50 {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    scrollbar-width: none;
+}
+
+/* Scrollbar styling */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #c4c4c4;
+    border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #a0a0a0;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #c4c4c4 #f0f0f0;
+}
+
+/* Tambahan dropdown untuk Aktivitas dan Donasi */
+.navbar-menu {
+    display: flex;
+    align-items: center;
+}
+
+.nav-item {
+    padding: 10px 15px;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-container:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 8px 0;
+}
+
+.dropdown-content a {
+    padding: 8px 16px;
+    display: block;
+    color: #1D4161;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f5f9;
+    color: #e16976;
+}
+
+.countUpElement {
+    font-size: 50px;
+    margin: 20px;
+}
+
+/* Tambahkan padding-top untuk konten utama */
+body.donation-page main {
+    padding-top: 60px; /* Sesuaikan dengan tinggi navbar */
+}
+
+
+
+
