@@ -235,7 +235,7 @@ class UserDonationController extends Controller
             'donation' => $donatur->donation
         ]);
 
-        $this->sendNotification($notificationData);
+        $this->sendSucessNotification($notificationData);
     
         return redirect()->route('donations.success', [
             'donation' => $donation->slug, 
@@ -248,7 +248,49 @@ class UserDonationController extends Controller
         return view('donations.success', compact('donation', 'donatur'));
     }  
 
-    public function sendNotification(Request $request)
+    public function sendSucessNotification(Request $request)
+    {
+        $messages = "Assalamu alaikum *" . $request->name . "*" . PHP_EOL . PHP_EOL .
+            "Donasi kamu sebesar Rp *" . number_format($request->total_amount, 0, ',', '.') . "* sudah kami terima dan akan disalurkan oleh SMART171 kepada yg bersangkutan." . PHP_EOL . PHP_EOL .
+            "Total Pembayaran: Rp *" . number_format($request->total_amount, 0, ',', '.') . "*" . PHP_EOL .
+            "Metode Pembayaran: *" . $request->payment_method . "*" . PHP_EOL .
+            "Donasi untuk *" . $request->donation->name . "*" . PHP_EOL . PHP_EOL .
+
+            "Jazakumullah khoir semoga Allah menberkahi rizqi *" . $request->name . "*" . PHP_EOL . PHP_EOL .
+            "Untuk penyaluran bantuan dapat dilihat pada link berikut" . PHP_EOL .
+            "smart171.org/documentations" . PHP_EOL .
+            "Untuk keberlanjutan penyaluran bantuan pada program yang berjalan kemungkinan akan kami kabari selanjutnya ya, kak." . PHP_EOL . PHP_EOL .
+
+            "Wassalamu’alaikum wr. wb." . PHP_EOL . PHP_EOL .
+
+            "Salam," . PHP_EOL .
+            "SMART171";
+        $number = $request->email;
+        $token = 'bz4HsTMiybc2ChGXUQ1V';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 0,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('target' => $number ,'message' => $messages),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: ' . $token
+            ),
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+    }
+
+    public function sendPaymentNotification(Request $request)
     {
         $messages = "Assalamu alaikum *" . $request->name . "*" . PHP_EOL . PHP_EOL .
             "Donasi kamu sebesar Rp *" . number_format($request->total_amount, 0, ',', '.') . "* sudah kami terima dan akan disalurkan oleh SMART171 kepada yg bersangkutan." . PHP_EOL . PHP_EOL .

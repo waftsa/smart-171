@@ -18,6 +18,7 @@ class Donation extends Model
         'category_id',
         'thumbnail',
         'thumbnail_public_id',
+        'thumbnail_text',
         'about',
         'code',
         'has_finished',

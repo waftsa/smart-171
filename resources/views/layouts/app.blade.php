@@ -5,6 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        @hasSection('meta')
+            @yield('meta')
+        @endif
+
+
+
         <title>{{ config('app.name', 'SMART171') }}</title>
 
         <!-- Fonts -->
@@ -49,8 +55,9 @@
             </main>
         </div>
         @endauth
-              
-        @if(auth()->guest() && !Route::is('donations.confirmation') && !Route::is('donations.success'))
+
+        @guest
+        @if(!Route::is('donations.confirmation') && !Route::is('donations.success'))
             <nav id="navbar" class="w-full z-50">
                 @if(Route::is('donations.*'))
                     @include('layouts.nav-donation')
@@ -60,7 +67,6 @@
             </nav>
         @endif
 
-        {{-- Page Tetap Ditampilkan --}}
         <div class="min-h-screen bg-[#ccddee] @if(Route::is('donations.*')) donation-page @endif">
             <main>
                 {{ $slot }} 
@@ -72,7 +78,7 @@
                 @include('layouts.footer')
             @endif
         </div>
-
+    @endguest
 
     </body>
 </html>

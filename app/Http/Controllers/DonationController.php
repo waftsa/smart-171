@@ -91,6 +91,7 @@ class DonationController extends Controller
             'about' => $validated['about'],
             'target_amount' => $validated['target_amount'],
             'code' => $validated['code'],
+            'thumbnail_text' => $validated['thumbnail_text'],
             'thumbnail' => $thumbnailUrl,
             'thumbnail_public_id' => $thumbnailPublicId,
             'has_finished' => false, 
@@ -160,6 +161,7 @@ class DonationController extends Controller
         $donation->slug = Str::slug($validated['name']);
         $donation->about = $validated['about'];
         $donation->code = $validated['code'];
+        $donation->thumbnail_text = $validated['thumbnail_text'];
         $donation->target_amount = $validated['target_amount'];
         $donation->slider = $request->input('slider', false); 
         $donation->category_id = $request->input('category_id', false); 

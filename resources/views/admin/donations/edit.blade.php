@@ -30,10 +30,17 @@
                     @method('PUT')
 
                     <div>
-                        <x-input-label for="name" :value="__('Name')" />
+                        <x-input-label for="name" :value="__('Nama Program')" />
                         <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" 
                         value="{{ $donation->name }}" required autofocus autocomplete="name" />
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="thumbnail_text" :value="__('Sub Nama Program')" />
+                        <x-text-input id="thumbnail_text" class="block mt-1 w-full" type="text" name="thumbnail_text" 
+                        value="{{ $donation->thumbnail_text }}" required autofocus autocomplete="thumbnail_text" />
+                        <x-input-error :messages="$errors->get('thumbnail_text')" class="mt-2" />
                     </div>
 
                     <div class="mt-4">
