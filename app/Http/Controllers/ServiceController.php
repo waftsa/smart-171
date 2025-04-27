@@ -34,22 +34,72 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Service $service)
     {
         //
         $request->validate([
             'name' => 'required|string',
-            'contact' => 'required|string',
+            'contact' => 'required|integer',
             'message' => 'required|string',
         ]);
 
+        $phone = $request->contact; // Assume email input is used for phone number
+    
+        if (strpos($phone, '08') === 0) {
+            $phone = '628' . substr($phone, 2);
+        } elseif (strpos($phone, '+628') === 0) {
+            $phone = '628' . substr($phone, 1);
+        }
+
         Service::create([
             'name' => $request->name,
-            'contact' => $request->contact,
+            'contact' => $phone,
             'message' => $request->message,
         ]);
 
+        $serviceNotificationData = new Request([
+            'name' => $service->name,
+            'contact' => $service->contact,
+        ]);
+
+        $this->sendServiceNotification($serviceNotificationData);
+
         return redirect()->route('home')->with('success', 'Pesan berhasil dikirim!');
+    }
+
+    public function sendServiceNotification(Request $request)
+    {
+        $messages = "Assalamu alaikum *" . $request->name . "*" . PHP_EOL . PHP_EOL .
+            "Terima kasih sudah menghubungi customer service kami via website, 
+            saat ini admin kami sedang meninjau kendala yang anda alami, mohon ditunggu 😇" . PHP_EOL . PHP_EOL .
+
+            "Wassalamu’alaikum wr. wb." . PHP_EOL . PHP_EOL .
+
+            "Salam," . PHP_EOL .
+            "SMART171";
+        $number = $request->contact;
+        $token = 'bz4HsTMiybc2ChGXUQ1V';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 0,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('target' => $number ,'message' => $messages),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: ' . $token
+            ),
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
     }
 
     /**

@@ -67,7 +67,7 @@
                     <div class="mt-4">
                         <x-input-label for="about" :value="__('Deksripsi Program')" />
                         <div id="quill-editor" class="block mt-1 w-full rounded-b-lg">{!! $donation->about !!}</div>
-                        <input hidden name="about" id="about" cols="30" rows="5" class="border border-slate-300 rounded-xl w-full" value="{{ $article->about }}"></input>
+                        <input hidden name="about" id="about" cols="30" rows="5" class="border border-slate-300 rounded-xl w-full" value="{{ $donation->about }}"></input>
                     </div>
 
                     <div class="mt-4">

@@ -17,7 +17,7 @@
         <!-- Garis Pembatas -->
         <hr class="my-10 border-t border-gray-300">
         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfEO4NM_iP3gNOq7-LrTUP9at-PFAQRaSRVv9CPr8wCN8REqg/viewform?embedded=true" 
-            width="640" 
+            width="auto" 
             height="3100" 
             frameborder="0" 
             marginheight="0" 
