@@ -167,6 +167,7 @@ class UserDonationController extends Controller
             'donation_id' => $request->donation_id,
             'payment_method' => $request->payment_method,
             'anonim' => $request->anonim,
+            'payment_status' => 'pending',
              // Set is_paid ke false untuk verifikasi admin
         ]);
 
