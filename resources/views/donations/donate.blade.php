@@ -99,10 +99,6 @@
                                     Bank BSI (Transfer Bank)
                                     <img src="{{asset('images/bsi-logo.png')}}" alt="BSI Logo" class="w-12 h-auto">
                                 </li>
-                                <li class="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-slate-100" onclick="selectPaymentMethod('Bank BCA SYARIAH (Transfer Bank)')">
-                                    Bank BCA SYARIAH (Transfer Bank)
-                                    <img src="{{asset('images/bca-syariah.png')}}" alt="BCA Syariah Logo" class="w-auto h-4">
-                                </li>
                                 <li class="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-slate-100" onclick="selectPaymentMethod('Scan QRCode / Qris')">
                                     Scan QRCode / Qris
                                     <img src="{{asset('images/qris-logo.png')}}" alt="QRIS Logo" class="w-12 h-auto">

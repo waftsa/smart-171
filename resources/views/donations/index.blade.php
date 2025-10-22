@@ -53,15 +53,17 @@
             <!-- Kategori Donasi -->
             <div class="mb-10">
                 <h2 class="text-2xl font-bold text-[#1D4161] mb-2">Kategori Donasi</h2>
-                <div class="flex gap-4 overflow-x-auto whitespace-nowrap px-4">
+                <div class="flex gap-4 overflow-x-auto px-4 sm:grid sm:grid-cols-4 sm:gap-6 sm:overflow-visible">
                     @foreach ($categories as $category)
-                        <a href="{{ route('donations.category', $category->id)}}" 
+                        <a href="{{ route('donations.category', $category->slug)}}" 
                             
-                            class="flex flex-col items-center rounded-xl w-20 sm:w-24 h-auto sm:h-auto p-2 text-center ">
+                            class="flex flex-col items-center flex-shrink-0 rounded-xl w-20 sm:w-24 h-auto sm:h-auto p-2 text-center ">
                             <img src="{{ $category->icon }}" 
                                 alt="{{ $category->name }}" 
                                 class="w-16 sm:w-20 h-16 sm:h-20 rounded-full object-cover mb-2 hover:scale-105 transition-transform duration-300">
-                            <span class="text-xs sm:text-sm text-gray-600">{{ $category->name }}</span>
+                            <span class="text-xs sm:text-sm text-gray-600 max-w-[90px] sm:max-w-full">
+                                {{ $category->name }}
+                            </span>
                         </a>
                     @endforeach
                 </div>

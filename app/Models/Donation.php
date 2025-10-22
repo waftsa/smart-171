@@ -21,6 +21,7 @@ class Donation extends Model
         'thumbnail_text',
         'about',
         'code',
+        'rekening',
         'has_finished',
         'is_active',
         'slider',

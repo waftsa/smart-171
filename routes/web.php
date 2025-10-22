@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::view('/privacy-policy', 'terms.privacy')->name('privacy');
+Route::view('/refund-policy', 'terms.refund')->name('refund');
+Route::view('/terms-conditions', 'terms.terms')->name('terms');
+
 
 // Route untuk Pengguna (Tanpa Autentikasi)
 Route::prefix('/')->group(function () {
@@ -37,7 +41,7 @@ Route::prefix('/')->group(function () {
     // Route Donasi
     Route::get('smartcampaign', [UserDonationController::class, 'index'])->name('donations.list');
     Route::get('smartcampaign/{donation:slug}', [UserDonationController::class, 'show'])->name('donations.show');
-    Route::get('smartcampaign/category/{category:category}', [UserDonationController::class, 'category'])->name('donations.category');
+    Route::get('smartcampaign/category/{category:slug}', [UserDonationController::class, 'category'])->name('donations.category');
     Route::get('smartcampaign/{donation:slug}/donate', [UserDonationController::class, 'showDonate'])->name('donations.donate');
     Route::post('smartcampaign/{donation:slug}/donate', [UserDonationController::class, 'store'])->name('donations.store');
     Route::get('smartcampaign/{donation}/donate/confirmation/{donatur}', [UserDonationController::class, 'showConfirmation'])->name('donations.confirmation');

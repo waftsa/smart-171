@@ -58,6 +58,14 @@
                     </div>
 
                     <div class="mt-4">
+                        <x-input-label for="rekening" :value="__('Nomor Rekening')" />
+                        <select name="rekening" id="rekening" class="py-3 rounded-lg pl-3 w-full border border-slate-300">
+                            <option value="campaign" selected>Campaign (7-666-171-661)</option>
+                            <option value="kurban">Kurban (7-333-171-338)</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-4">
                         <x-input-label for="code" :value="__('Kode Unik')" />
                         <x-text-input id="code" class="block mt-1 w-full" type="number" name="code" 
                         value="{{ $donation->code }}" required autofocus autocomplete="code" />

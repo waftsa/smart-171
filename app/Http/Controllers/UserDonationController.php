@@ -94,10 +94,10 @@ class UserDonationController extends Controller
         return view('donations.show', compact('donation', 'goalReached', 'percentage', 'totalDonations', 'donaturs'));
     }
 
-    public function category($id)
+    public function category(Category $category)
     {
 
-        $category = Category::findOrFail($id);
+        // $category = Category::findOrFail($id);
 
         $donations = Donation::where('category_id', $category->id)->get();
 

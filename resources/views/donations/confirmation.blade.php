@@ -9,43 +9,83 @@
                 </div>
 
                 <!-- Header Dinamis -->
-                <div class="text-center">
-                    <p class="text-l font-semibold text-indigo-950 mb-2">Metode Pembayaran:</p>
-                    @if ($donatur->payment_method === 'Scan QRCode / Qris')
-                        <img src="{{ asset('images/qris-logo.png') }}" class="mx-auto mb-4 w-16 h-auto">
-                        <p>Scan QRcode di bawah ini!</p>
-                        <img src="{{ asset('images/qris.png') }}" class="mx-auto mb-4 w-64 h-auto">
-                    @endif
-                </div>
-
-                <!-- Nomor Rekening BSI atau BCA Syariah (Responsive) -->
-                @if ($donatur->payment_method !== 'Scan QRCode / Qris')
-                    <div class="mt-6">
-                        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 py-4">
-                            <!-- Logo Bank -->
-                            <img 
-                                src="{{ $donatur->payment_method === 'Bank BSI (Transfer Bank)' ? asset('images/bsi-logo.png') : asset('images/bca-syariah.png') }}" 
-                                alt="Bank Logo" 
-                                class="w-28 h-auto">
-
-                            <!-- Informasi Rekening -->
-                            <div class="text-center sm:text-left">
-                                @if ($donatur->payment_method === 'Bank BSI (Transfer Bank)')
-                                    <p class="text-lg font-bold text-indigo-950">7666171661</p>
-                                    <p class="text-sm text-gray-600">a.n Solidaritas Muslim Al Quds Resist</p>
-                                @elseif ($donatur->payment_method === 'Bank BCA SYARIAH (Transfer Bank)')
-                                    <p class="text-lg font-bold text-indigo-950">0358171171</p>
-                                    <p class="text-sm text-gray-600">a.n Solidaritas Muslim Al Quds Resist</p>
-                                @endif
-                            </div>
-
-                            <!-- Tombol Copy -->
-                            <button type="button" onclick="copyText('{{ $donatur->payment_method === 'Bank BSI (Transfer Bank)' ? '7666171661' : '0358171171' }}')" class="flex items-center space-x-1 p-2 text-indigo-600 hover:text-indigo-800">
-                                <!-- <img src="{{ asset('icons/copy.svg') }}" alt="Copy Icon" class="w-4 h-4"> -->
-                                 <p class="text-xs">Salin No Rekening</p>
-                            </button>
-                        </div>
+                @if($donation->rekening === 'campaign')
+                    <div class="text-center">
+                        <p class="text-l font-semibold text-indigo-950 mb-2">Metode Pembayaran:</p>
+                        
+                            @if ($donatur->payment_method === 'Scan QRCode / Qris')
+                                <img src="{{ asset('images/qris-logo.png') }}" class="mx-auto mb-4 w-16 h-auto">
+                                <p>Scan QRcode di bawah ini!</p>
+                                <img src="{{ asset('images/qris_campaign.png') }}" class="mx-auto mb-4 w-64 h-auto">
+                            @endif
+                        
                     </div>
+
+                    <!-- Nomor Rekening BSI atau BCA Syariah (Responsive) -->
+                    @if ($donatur->payment_method !== 'Scan QRCode / Qris')
+                        <div class="mt-6">
+                            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 py-4">
+                                <!-- Logo Bank -->
+                                <img 
+                                    src="{{ $donatur->payment_method === 'Bank BSI (Transfer Bank)' ? asset('images/bsi-logo.png') : asset('images/bca-syariah.png') }}" 
+                                    alt="Bank Logo" 
+                                    class="w-28 h-auto">
+
+                                <!-- Informasi Rekening -->
+                                <div class="text-center sm:text-left">
+                                    @if ($donatur->payment_method === 'Bank BSI (Transfer Bank)')
+                                        <p class="text-lg font-bold text-indigo-950">7-666-171-661</p>
+                                        <p class="text-sm text-gray-600">a.n Solidaritas Muslim Al Quds Resist</p>
+                                    @endif
+                                </div>
+
+                                <!-- Tombol Copy -->
+                                <button type="button" onclick="copyText('{{ $donatur->payment_method === 'Bank BSI (Transfer Bank)' ? '7666171661' : '0358171171' }}')" class="flex items-center space-x-1 p-2 text-indigo-600 hover:text-indigo-800">
+                                    <!-- <img src="{{ asset('icons/copy.svg') }}" alt="Copy Icon" class="w-4 h-4"> -->
+                                    <p class="text-xs">Salin No Rekening</p>
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
+                @elseif($donation->rekening === 'kurban')
+                    <div class="text-center">
+                        <p class="text-l font-semibold text-indigo-950 mb-2">Metode Pembayaran:</p>
+                        
+                            @if ($donatur->payment_method === 'Scan QRCode / Qris')
+                                <img src="{{ asset('images/qris-logo.png') }}" class="mx-auto mb-4 w-16 h-auto">
+                                <p>Scan QRcode di bawah ini!</p>
+                                <img src="{{ asset('images/qris_kurban.jpg') }}" class="mx-auto mb-4 w-64 h-auto">
+                            @endif
+                        
+                    </div>
+
+                    <!-- Nomor Rekening BSI atau BCA Syariah (Responsive) -->
+                    @if ($donatur->payment_method !== 'Scan QRCode / Qris')
+                        <div class="mt-6">
+                            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 py-4">
+                                <!-- Logo Bank -->
+                                <img 
+                                    src="{{ $donatur->payment_method === 'Bank BSI (Transfer Bank)' ? asset('images/bsi-logo.png') : asset('images/bca-syariah.png') }}" 
+                                    alt="Bank Logo" 
+                                    class="w-28 h-auto">
+
+                                <!-- Informasi Rekening -->
+                                <div class="text-center sm:text-left">
+                                    @if ($donatur->payment_method === 'Bank BSI (Transfer Bank)')
+                                        <p class="text-lg font-bold text-indigo-950">7-333-171-338</p>
+                                        <p class="text-sm text-gray-600">a.n Solidaritas Muslim Al Quds Resist</p>
+                                    @endif
+                                </div>
+
+                                <!-- Tombol Copy -->
+                                <button type="button" onclick="copyText('{{ $donatur->payment_method === 'Bank BSI (Transfer Bank)' ? '7333171338' : '0358171171' }}')" class="flex items-center space-x-1 p-2 text-indigo-600 hover:text-indigo-800">
+                                    <!-- <img src="{{ asset('icons/copy.svg') }}" alt="Copy Icon" class="w-4 h-4"> -->
+                                    <p class="text-xs">Salin No Rekening</p>
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 @endif
 
                 <!-- Total Amount -->
@@ -80,12 +120,6 @@
                             @elseif ($donatur->payment_method === 'Bank BSI (Transfer Bank)')
                                 <li>Buka aplikasi BSI Mobile / Byond App atau ATM.</li>
                                 <li>Pilih menu transfer dan masukkan nomor rekening berikut: <strong>7666171661</strong>.</li>
-                                <li>Masukkan nominal sesuai jumlah donasi Anda.</li>
-                                <li>Masukkan PIN untuk memproses pembayaran Anda.</li>
-                                <li>Apabila pembayaran berhasil, Upload bukti transfer pada tombol dibawah.</li>
-                            @elseif ($donatur->payment_method === 'Bank BCA SYARIAH (Transfer Bank)')
-                                <li>Buka aplikasi BCA Syariah Mobile atau ATM.</li>
-                                <li>Pilih menu transfer dan masukkan nomor rekening berikut: <strong>0358171171</strong>.</li>
                                 <li>Masukkan nominal sesuai jumlah donasi Anda.</li>
                                 <li>Masukkan PIN untuk memproses pembayaran Anda.</li>
                                 <li>Apabila pembayaran berhasil, Upload bukti transfer pada tombol dibawah.</li>

@@ -90,6 +90,7 @@ class DonationController extends Controller
             'slug' => Str::slug($validated['name']),
             'about' => $validated['about'],
             'target_amount' => $validated['target_amount'],
+            'rekening' => $request->input('rekening', false),
             'code' => $validated['code'],
             'thumbnail_text' => $validated['thumbnail_text'],
             'thumbnail' => $thumbnailUrl,
@@ -165,6 +166,8 @@ class DonationController extends Controller
         $donation->target_amount = $validated['target_amount'];
         $donation->slider = $request->input('slider', false); 
         $donation->category_id = $request->input('category_id', false); 
+        $donation->rekening = $request->input('rekening', false);
+
 
         $donation->save();
 

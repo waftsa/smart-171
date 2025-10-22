@@ -71,8 +71,19 @@
     </div>
     </div>
         <!-- Copyright -->
-        <div class="mt-6 border-t border-gray-700 pt-4">
-            <p>&copy; 2025 SMART171. All Rights Reserved.</p>
+       
+            <div class="mt-6 border-t border-gray-700 pt-4 text-xs text-gray-400">
+                <p class="mb-1">&copy; 2025 SMART171. All Rights Reserved.</p>
+                <div class="flex flex-wrap justify-center space-x-3">
+                    <a href="{{ route('privacy') }}" class="hover:underline">Kebijakan Privasi</a>
+                    <span>|</span>
+                    <a href="{{ route('refund') }}" class="hover:underline">Kebijakan Pengembalian</a>
+                    <span>|</span>
+                    <a href="{{ route('terms') }}" class="hover:underline">Syarat & Ketentuan</a>
+                    <span>|</span>
+                    <a href="{{ route('contact-us') }}" class="hover:underline">Hubungi Kami</a>
+                </div>
+            
         </div>
     </div>
 </footer>

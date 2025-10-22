@@ -22,6 +22,7 @@ class StoreDonationRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'about' => 'required|string',
+            'rekening' => 'required|string',
             'thumbnail_text' => 'required|string|max:100',
             'target_amount' => 'required|numeric|min:0',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',

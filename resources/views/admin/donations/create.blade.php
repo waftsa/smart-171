@@ -61,6 +61,15 @@
                     </div>
 
                     <div class="mt-4">
+                        <x-input-label for="rekening" :value="__('Nomor Rekening')" />
+                        <select name="rekening" id="rekening" class="py-3 rounded-lg pl-3 w-full border border-slate-300">
+                            <option value="campaign" selected>Campaign (7-666-171-661)</option>
+                            <option value="kurban">Kurban (7-333-171-338)</option>
+                        </select>
+                    </div>
+
+
+                    <div class="mt-4">
                         <x-input-label for="about" :value="__('Deskripsi Program')" />
                         <div id="quill-editor" class="block mt-1 w-full rounded-b-lg"></div>
                         <input hidden name="about" id="about" cols="30" rows="5" class="border border-slate-300 rounded-xl w-full">{{ old('about') }}</input>

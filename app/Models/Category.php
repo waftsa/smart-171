@@ -30,5 +30,10 @@ class Category extends Model
     public function documentations(){
         return $this->hasMany(Documentation::class);
     }
+    
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }
 
