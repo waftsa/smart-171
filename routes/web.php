@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BuletinController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\DonationController;
@@ -113,6 +114,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Route Slider
     Route::get('sliders', [SliderController::class, 'index'])->name('sliders.index');
     Route::delete('sliders/{type}/{id}', [SliderController::class, 'destroy'])->name('sliders.destroy');
+
+    // Route Buletins
+    Route::resource('buletins', BuletinController::class)->except(['index']);
+    Route::get('buletins', [BuletinController::class, 'index'])->name('buletins.index');
+    Route::post('buletins/{buletin}/publish', [BuletinController::class, 'publish'])->name('buletins.publish');
 });
 
 require __DIR__.'/auth.php';
