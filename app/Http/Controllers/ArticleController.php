@@ -10,6 +10,7 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
@@ -40,7 +41,7 @@ class ArticleController extends Controller
             }
         }
 
-        $articles = $query->paginate(15);
+        $articles = $query->paginate(5);
 
         return view('admin.articles.index', compact('articles'));
     }
@@ -60,29 +61,30 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         $validated = $request->validated();
-        $coverUrl = null;
-        $coverPublicId = null;
+        // $coverUrl = null;
+        // $coverPublicId = null;
 
-        if ($request->hasFile('cover')) {
-            $uploadedFile = $request->file('cover');
+        // if ($request->hasFile('cover')) {
+        //     $uploadedFile = $request->file('cover');
 
-            // Upload ke Cloudinary
-            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
-                'folder' => 'articles/covers'
-            ]);
+        //     // Upload ke Cloudinary
+        //     $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
+        //         'folder' => 'articles/covers'
+        //     ]);
 
-            // Dapatkan URL gambar & Public ID
-            $coverUrl = $uploadResult->getSecurePath();
-            $coverPublicId = $uploadResult->getPublicId();
-        }
+        //     // Dapatkan URL gambar & Public ID
+        //     $coverUrl = $uploadResult->getSecurePath();
+        //     $coverPublicId = $uploadResult->getPublicId();
+        // }
+        $coverPath = $request->file('cover')->store('articles', 'public');
 
         Article::create([
             'title' => $validated['title'],
             'slug' => Str::slug($validated['title']),
             'summary' => $validated['summary'],
             'content' => $validated['content'],
-            'cover' => $coverUrl,
-            'cover_public_id' => $coverPublicId, // Simpan Public ID
+            'cover' => $coverPath,
+            'cover_public_id' => $coverPath, // Simpan Public ID
             'status' => false,
             'slider' => $request->input('slider', false),
             'user_id' => Auth::id(),
@@ -121,20 +123,26 @@ class ArticleController extends Controller
         }
 
         if ($request->hasFile('cover')) {
-            // Hapus gambar lama jika ada
-            if ($article->cover_public_id) {
-                Cloudinary::destroy($article->cover_public_id);
-            }
-
-            // Upload gambar baru
-            $uploadedFile = $request->file('cover');
-            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
-                'folder' => 'articles/covers'
-            ]);
-
-            $article->cover = $uploadResult->getSecurePath();
-            $article->cover_public_id = $uploadResult->getPublicId(); // Simpan Public ID
+            $coverPath = $request->file('cover')->store('articles', 'public');
+            $article->cover = $coverPath; // Update cover jika file baru diupload
+            $article->cover_public_id = $coverPath;
         }
+
+        // if ($request->hasFile('cover')) {
+        //     // Hapus gambar lama jika ada
+        //     if ($article->cover_public_id) {
+        //         Cloudinary::destroy($article->cover_public_id);
+        //     }
+
+        //     // Upload gambar baru
+        //     $uploadedFile = $request->file('cover');
+        //     $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
+        //         'folder' => 'articles/covers'
+        //     ]);
+
+            // $article->cover = $uploadResult->getSecurePath();
+        //     $article->cover_public_id = $uploadResult->getPublicId(); // Simpan Public ID
+        // }
 
         $article->title = $validated['title'];
         $article->slug = Str::slug($validated['title']);
@@ -159,11 +167,20 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        if ($article->cover_public_id) {
-            Cloudinary::destroy($article->cover_public_id);
-        }
+    // 1️⃣ Hapus di Cloudinary (jika ada)
+    if ($article->cover_public_id && !str_starts_with($article->cover_public_id, 'articles/')) {
+        Cloudinary::destroy($article->cover_public_id);
+    }
 
-        $article->delete();
-        return redirect()->route('admin.articles.index');
+    // 2️⃣ Hapus file lokal (jika ada)
+    if ($article->cover && Storage::disk('public')->exists($article->cover)) {
+        Storage::disk('public')->delete($article->cover);
+    }
+
+    // 3️⃣ Hapus data artikel
+    $article->delete();
+
+    return redirect()->route('admin.articles.index');
+
     }
 }

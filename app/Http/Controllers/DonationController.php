@@ -69,22 +69,8 @@ class DonationController extends Controller
     {
         $validated = $request->validated();
 
-        $thumbnailUrl = null;
-        $thumbnailPublicId = null;
+        $thumbnailPath = $request->file('thumbnail')->store('donations', 'public');
 
-        if ($request->hasFile('thumbnail')) {
-            $uploadedFile = $request->file('thumbnail');
-
-            // Upload ke Cloudinary
-            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
-                'folder' => 'donations/thumbnails'
-            ]);
-
-            // Dapatkan URL gambar & Public ID
-            $thumbnailUrl = $uploadResult->getSecurePath();
-            $thumbnailPublicId = $uploadResult->getPublicId();
-        }
-        
         Donation::create([
             'name' => $validated['name'],
             'slug' => Str::slug($validated['name']),
@@ -93,8 +79,8 @@ class DonationController extends Controller
             'rekening' => $request->input('rekening', false),
             'code' => $validated['code'],
             'thumbnail_text' => $validated['thumbnail_text'],
-            'thumbnail' => $thumbnailUrl,
-            'thumbnail_public_id' => $thumbnailPublicId,
+            'thumbnail' => $thumbnailPath,
+            'thumbnail_public_id' => $thumbnailPath,
             'has_finished' => false, 
             'is_active' => false, 
             'slider' => $request->input('slider', false),
@@ -143,20 +129,26 @@ class DonationController extends Controller
         }
 
         if ($request->hasFile('thumbnail')) {
-            // Hapus gambar lama jika ada
-            if ($donation->thumbnail_public_id) {
-                Cloudinary::destroy($donation->thumbnail_public_id);
-            }
-
-            // Upload gambar baru
-            $uploadedFile = $request->file('thumbnail');
-            $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
-                'folder' => 'donations/thumbnails'
-            ]);
-
-            $donation->thumbnail = $uploadResult->getSecurePath();
-            $donation->thumbnail_public_id = $uploadResult->getPublicId(); // Simpan Public ID
+            $coverPath = $request->file('thumbnail')->store('donations', 'public');
+            $donation->thumbnail = $coverPath; // Update thumbnail jika file baru diupload
+            $donation->thumbnail_public_id = $coverPath;
         }
+
+        // if ($request->hasFile('thumbnail')) {
+        //     // Hapus gambar lama jika ada
+        //     if ($donation->thumbnail_public_id) {
+        //         Cloudinary::destroy($donation->thumbnail_public_id);
+        //     }
+
+        //     // Upload gambar baru
+        //     $uploadedFile = $request->file('thumbnail');
+        //     $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
+        //         'folder' => 'donations/thumbnails'
+        //     ]);
+
+        //     $donation->thumbnail = $uploadResult->getSecurePath();
+        //     $donation->thumbnail_public_id = $uploadResult->getPublicId(); // Simpan Public ID
+        // }
 
         $donation->name = $validated['name'];
         $donation->slug = Str::slug($validated['name']);
@@ -188,6 +180,10 @@ class DonationController extends Controller
     {
         if ($donation->thumbnail_public_id) {
             Cloudinary::destroy($donation->thumbnail_public_id);
+        }
+
+         if ($donation->cover && Storage::disk('public')->exists($donation->cover)) {
+        Storage::disk('public')->delete($donation->cover);
         }
 
         $donation->delete();

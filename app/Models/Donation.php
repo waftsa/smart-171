@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+
 
 class Donation extends Model
 {
@@ -46,6 +48,26 @@ class Donation extends Model
 
     public function getRouteKeyName()
     {
-        return 'slug';
+    return 'slug';
+    }   
+
+    public function getCoverUrlAttribute($value)
+    {
+         if (! $value) {
+            return asset('images/placeholder.jpg');
+        }
+    
+        // Cloudinary / external
+        if (preg_match('/^https?:\/\//', $value)) {
+            return $value;
+        }
+    
+        // Sudah ada storage/
+        if (str_starts_with($value, 'storage/')) {
+            return asset($value);
+        }
+    
+        // Local normal
+        return asset('storage/' . $value);
     }
 }

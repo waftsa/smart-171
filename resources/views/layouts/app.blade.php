@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        
 
         @hasSection('meta')
             @yield('meta')
@@ -35,7 +33,39 @@
         <!-- quilleditor -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
-                                        
+        
+        <!-- pdf  -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+        <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("canvas[data-pdf]").forEach(canvas => {
+                const pdfUrl = canvas.dataset.pdf;
+
+                pdfjsLib.getDocument(pdfUrl).promise
+                    .then(pdf => pdf.getPage(1))
+                    .then(page => {
+                        const ctx = canvas.getContext("2d");
+                        const viewport = page.getViewport({ scale: 0.3 });
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+
+                        page.render({ canvasContext: ctx, viewport });
+                    })
+                    .catch(() => {
+                        canvas.outerHTML = `
+                            <div class="w-[120px] h-[90px] flex items-center justify-center border rounded text-xs text-gray-500">
+                                PDF
+                            </div>
+                        `;
+                    });
+            });
+        });
+        </script>
+
+    
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

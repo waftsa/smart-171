@@ -1,4 +1,21 @@
 <x-app-layout>
+    @section('meta')
+        <meta property="og:title" content="{{ $donation->name }}">
+        <meta property="og:description" content="{{ strip_tags(Str::limit($donation->about, 120)) }}">
+        <meta property="og:image" content="{{ $donation->thumbnail }}">
+        <meta property="og:image:secure_url" content="{{ $donation->thumbnail }}">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:type" content="article">
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $donation->name }}">
+        <meta name="twitter:description" content="{{ strip_tags(Str::limit($donation->about, 120)) }}">
+        <meta name="twitter:image" content="{{ $donation->thumbnail }}">
+    @endsection
+
+
     <div class="bg-[#1D4161]">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
             <div class=" absolute top-0 left-0 w-full h-56 bg-gradient-to-b from-[#1D4161] to-transparent pointer-events-none z-10"></div>  
@@ -30,9 +47,6 @@
                         Tersisa <strong class="text-[#e16976]">Rp 0 </strong>
                     </p>
                     </div>
-           
-               
-               
 
                 @else
                 <div class="flex-1">
@@ -73,35 +87,44 @@
             </div>
 
             <!-- donatur -->
-            <div class="bg-white overflow-hidden shadow-sm rounded-lg p-4 sm:p-5  flex flex-col gap-y-2 sm:gap-y-1 mt-2">
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg p-4 sm:p-5 flex flex-col gap-y-2 sm:gap-y-1 mt-2">
                 <p class="text-slate-900 font-semibold">Donatur</p>
                 <hr class="my-2 w-full">
-                @foreach ($donaturs as $donatur)
+
+                @forelse ($donaturs as $donatur)
                     <div class="bg-gray-100 rounded-lg shadow-sm mb-3 overflow-hidden">
-                        <div class="flex items-start justify-between  p-3 sm:p-4">
+                        <div class="flex items-start justify-between p-3 sm:p-4">
+                            
                             {{-- Avatar dan Nama --}}
                             <div class="flex items-start gap-3">
                                 <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 font-semibold">
                                     {{ $donatur->anonim ? 'HA' : strtoupper(substr($donatur->name, 0, 2)) }}
                                 </div>
                                 <div>
-                                    <p class="font-semibold text-sm">{{ $donatur->anonim ? 'Hamba Allah' : $donatur->name }}</p>
-                                    <p class="text-sm text-gray-500">{{ $donatur->created_at->diffForHumans() }}</p>
+                                    <p class="font-semibold text-sm">
+                                        {{ $donatur->anonim ? 'Hamba Allah' : $donatur->name }}
+                                    </p>
+                                    <p class="text-sm text-gray-500">
+                                        {{ $donatur->created_at->diffForHumans() }}
+                                    </p>
                                 </div>
                             </div>
 
                             {{-- Nominal --}}
-                            <p class="text-gray-900 font-semibold text-xs">Rp {{ number_format($donatur->total_amount, 0, ',', '.') }}</p>
+                            <p class="text-gray-900 font-semibold text-xs">
+                                Rp {{ number_format($donatur->total_amount, 0, ',', '.') }}
+                            </p>
                         </div>
 
-                        {{-- Kotak Notes jika ada --}}
+                        {{-- Notes --}}
                         @if ($donatur->notes)
                             <div class="border-t border-gray-300 bg-white p-4">
                                 <p class="text-gray-700 text-sm">{{ $donatur->notes }}</p>
+
                                 <div class="mt-2 bg-gray-100 rounded-md p-2 text-sm text-gray-600 flex justify-between items-center">
                                     <span>Aminkan doa ini</span>
                                     <button 
-                                        class="px-3 py-1 bg-gray-200 rounded-md text-gray-700 font-medium transition-all" 
+                                        class="px-3 py-1 bg-gray-200 rounded-md text-gray-700 font-medium transition-all"
                                         onclick="toggleAamiin(this)" 
                                         data-liked="false"
                                     >
@@ -111,8 +134,14 @@
                             </div>
                         @endif
                     </div>
-                @endforeach
+                @empty
+                    {{-- Jika belum ada donatur --}}
+                    <div class="text-center py-6 text-gray-500 text-sm">
+                        Belum ada donasi pada program ini 🙏
+                    </div>
+                @endforelse
             </div>
+
 
 
             <!-- bagikan  -->

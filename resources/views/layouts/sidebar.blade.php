@@ -29,7 +29,7 @@
             <a href="{{ route('admin.releases.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
                 {{ __('Smart Releases') }}
             </a>
-            <a href="{{ route('admin.buletins.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+            <a href="{{ route('admin.bulletins.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
                 {{ __('Smart Buletin') }}
             </a>
             <a href="{{ route('admin.categories.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">

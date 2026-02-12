@@ -15,6 +15,8 @@ use App\Http\Controllers\UserArticleController;
 use App\Http\Controllers\UserDocumentationController;
 use App\Http\Controllers\UserDonationController;
 use App\Http\Controllers\UserReleaseController;
+use App\Http\Controllers\UserBuletinController;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Route;
 
 // Halaman Utama
@@ -62,6 +64,10 @@ Route::prefix('/')->group(function () {
     Route::get('smartreleases', [UserReleaseController::class, 'index'])->name('releases.list');
     Route::get('smartreleases/filter', [UserReleaseController::class, 'filter'])->name('releases.filter');
     Route::get('smartreleases/{release:slug}', [UserReleaseController::class, 'show'])->name('releases.show');
+
+    Route::get('smart-bulletins', [UserBuletinController::class, 'index'])->name('buletins.list');
+    Route::get('smart-bulletins/filter', [UserBuletinController::class, 'filter'])->name('buletins.filter');
+    Route::get('smart-bulletins/{buletin:slug}', [UserBuletinController::class, 'show'])->name('buletins.show');
 });
 
 // Route Dashboard dan Profil untuk Pengguna dengan Autentikasi
@@ -116,9 +122,24 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::delete('sliders/{type}/{id}', [SliderController::class, 'destroy'])->name('sliders.destroy');
 
     // Route Buletins
-    Route::resource('buletins', BuletinController::class)->except(['index']);
-    Route::get('buletins', [BuletinController::class, 'index'])->name('buletins.index');
-    Route::post('buletins/{buletin}/publish', [BuletinController::class, 'publish'])->name('buletins.publish');
+    Route::resource('bulletins', BuletinController::class)->except(['index']);
+    Route::get('bulletins', [BuletinController::class, 'index'])->name('bulletins.index');
+    Route::post('bulletins/{bulletin}/publish', [BuletinController::class, 'publish'])->name('bulletins.publish');
+
+    // Route::get('/cloudinary-signature', function () {
+    //     $timestamp = time();
+    //     $signature = Cloudinary::signParameters(
+    //         ['timestamp' => $timestamp]
+    //     );
+
+    //     return [
+    //         'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+    //         'api_key' => env('CLOUDINARY_API_KEY'),
+    //         'timestamp' => $timestamp,
+    //         'signature' => $signature
+    //     ];
+    // });
+
 });
 
 require __DIR__.'/auth.php';

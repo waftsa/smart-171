@@ -13,7 +13,7 @@
 
                 @if($article->status)
                 <span class="text-white font-bold bg-green-500 rounded-2xl w-fit p-5">
-                    Dokumentasi telah dipublikasikan
+                    Berita telah dipublikasikan
                 </span>
                 @else
                 <div class="flex flex-row justify-between">

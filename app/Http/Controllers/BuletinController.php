@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBuletinRequest;
-use App\Http\Requests\UpdateArticleRequest;
-use App\Models\Buletin;
+use App\Http\Requests\StoreBulletinRequest;
+use App\Http\Requests\UpdateBulletinRequest;
+use App\Models\Bulletin;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Cloudinary\Api\Upload\UploadApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Spatie\PdfToImage\Pdf;
 
 class BuletinController extends Controller
 {
@@ -21,7 +22,7 @@ class BuletinController extends Controller
         $search = $request->query('search');
         $sortBy = $request->query('sort_by');
 
-        $query = Buletin::query();
+        $query = Bulletin::query();
 
         if ($search) {
             $query->where('title', 'like', "%$search%")
@@ -40,9 +41,9 @@ class BuletinController extends Controller
             }
         }
 
-        $buletins = $query->paginate(15);
+        $bulletins = $query->paginate(15);
 
-        return view('admin.buletins.index', compact('buletins'));
+        return view('admin.bulletins.index', compact('bulletins'));
     }
 
     /**
@@ -50,124 +51,144 @@ class BuletinController extends Controller
      */
     public function create()
     {
-        return view('admin.buletins.create');
+        return view('admin.bulletins.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBuletinRequest $request)
+    public function store(StoreBulletinRequest $request)
     {
 
-        $validated = $request->validated();
+    $validated = $request->validated();
 
-        $fileUrl = null;
-        $filePublicId = null;
+    if($request->hasFile('file')){
+        $pdf = $request->file('file');
 
-        if ($request->hasFile('file')) {
-        $uploadedFile = $request->file('file');
+        $pdfPath = $request->file('file')->store('bulletins', 'public');
 
-        $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+        // $thumbnailName = pathinfo($pdf->hashName(), PATHINFO_FILENAME) . '.jpg';
+        // $thumbnailPath = 'bulletins/thumbnails/' . $thumbnailName;
 
-        $uploadResult = (new UploadApi())->upload(
-            $uploadedFile->getRealPath(),
-            [
-                'folder' => 'buletins/files',
-                'resource_type' => 'auto',
-                'type' => 'upload', 
-                'public_id' => $originalName,
-                'format' => 'pdf',
-                'use_filename' => true,
-                'unique_filename' => true,
-            ]
-        );
-
-        $fileUrl = $uploadResult['secure_url'];
-        $filePublicId = $uploadResult['public_id'];
+        // $pdfToImage = new Pdf(storage_path('app/public/' . $pdfPath));
+        // $pdfToImage->setPage(1)
+        //         ->setOutputFormat('jpg')
+        //         ->saveImage(storage_path('app/public/' . $thumbnailPath));
+        
+        
+        Bulletin::create([
+            'title' => $validated['title'],
+            'slug' => Str::slug($validated['title']), 
+            'publisher' => $validated['publisher'],
+            'file' => $pdfPath,
+            // 'cover' => $thumbnailPath,
+            // 'file_public_id' => $coverPath,
+        ]);
     }
 
-        Buletin::create([
-            'title' => $validated['title'],
-            'publisher' => $validated['publisher'],
-            'file' => $fileUrl,
-            'file_public_id' => $filePublicId,
-            'status' => false,
-        ]);
 
-        return redirect()->route('admin.buletins.index');
-        }
+    // cloudinary 
+    //     $fileUrl = null;
+    //     $filePublicId = null;
+
+    //     if ($request->hasFile('file')) {
+    //     $uploadedFile = $request->file('file');
+
+    //     $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+    //     $uploadResult = (new UploadApi())->upload(
+    //         $uploadedFile->getRealPath(),
+    //         [
+    //             'folder' => 'bulletins/files',
+    //             'resource_type' => 'auto',
+    //             'type' => 'upload', 
+    //             'public_id' => $originalName,
+    //             'format' => 'pdf',
+    //             'use_filename' => true,
+    //             'unique_filename' => true,
+    //         ]
+    //     );
+
+    //     $fileUrl = $uploadResult['secure_url'];
+    //     $filePublicId = $uploadResult['public_id'];
+    // }
+
+        
+
+    return redirect()->route('admin.bulletins.index');
+    }
 
     /**
      * Show the form for editing the specified resource.
      */
 
-     public function show(Buletin $buletin)
+     public function show(Bulletin $bulletin)
     {
         //
-        return view('admin.buletins.show', compact('buletin'));
+        return view('admin.bulletins.show', compact('bulletin'));
     }
 
-    public function edit(Buletin $buletin)
+    public function edit(Bulletin $bulletin)
     {
-        return view('admin.buletins.edit', compact('buletin'));
+        return view('admin.bulletins.edit', compact('bulletin'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateArticleRequest $request, Buletin $buletin)
+    public function update(UpdateBulletinRequest $request, Bulletin $bulletin)
     {
         $validated = $request->validated();
 
         // Generate slug if name is updated
-        if ($request->has('title') && $request->title != $buletin->title) {
+        if ($request->has('title') && $request->title != $bulletin->title) {
             $validated['slug'] = Str::slug($validated['title'], '-') . '-' . Str::random(5);
         }
 
         if ($request->hasFile('file')) {
             // Hapus gambar lama jika ada
-            if ($buletin->cover_public_id) {
-                Cloudinary::destroy($buletin->cover_public_id);
+            if ($bulletin->cover_public_id) {
+                Cloudinary::destroy($bulletin->cover_public_id);
             }
 
             // Upload gambar baru
             $uploadedFile = $request->file('file');
             $uploadResult = Cloudinary::upload($uploadedFile->getRealPath(), [
-                'folder' => 'buletins/covers'
+                'folder' => 'bulletins/covers'
             ]);
 
-            $buletin->file = $uploadResult->getSecurePath();
-            $buletin->cover_public_id = $uploadResult->getPublicId(); // Simpan Public ID
+            $bulletin->file = $uploadResult->getSecurePath();
+            $bulletin->cover_public_id = $uploadResult->getPublicId(); // Simpan Public ID
         }
 
-        $buletin->title = $validated['title'];
-        $buletin->slug = Str::slug($validated['title']);
-        $buletin->summary = $validated['summary'];
-        $buletin->content = $validated['content'];
-        $buletin->slider = $request->input('slider', false);
-        $buletin->category_id = $request->input('category_id', false);
+        $bulletin->title = $validated['title'];
+        $bulletin->slug = Str::slug($validated['title']);
+        $bulletin->summary = $validated['summary'];
+        $bulletin->content = $validated['content'];
+        $bulletin->slider = $request->input('slider', false);
+        $bulletin->category_id = $request->input('category_id', false);
 
-        $buletin->save();
+        $bulletin->save();
 
-        return redirect()->route('admin.buletins.index');
+        return redirect()->route('admin.bulletins.index');
     }
 
-    public function publish(Buletin $buletin)
+    public function publish(Bulletin $bulletin)
     {
-        $buletin->update(['status' => true]);
-        return redirect()->route('admin.buletins.show', $buletin);
+        $bulletin->update(['status' => true]);
+        return redirect()->route('admin.bulletins.show', $bulletin);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Buletin $buletin)
+    public function destroy(Bulletin $bulletin)
     {
-        if ($buletin->cover_public_id) {
-            Cloudinary::destroy($buletin->cover_public_id);
+        if ($bulletin->cover_public_id) {
+            Cloudinary::destroy($bulletin->cover_public_id);
         }
 
-        $buletin->delete();
-        return redirect()->route('admin.buletins.index');
+        $bulletin->delete();
+        return redirect()->route('admin.bulletins.index');
     }
 }
