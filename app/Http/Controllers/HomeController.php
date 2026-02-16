@@ -8,38 +8,67 @@ use App\Models\Donation;
 use App\Models\Release;
 use App\Models\Slider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
     //
     public function index()
     {
-        $articles = Article::where('status', true)->latest()->take(6)->get();
-        $releases = Release::where('status', true)->latest()->take(3)->get();
-        $donations = Donation::where('is_active', true)->latest()->take(6)->get(); 
-        $documentations = Documentation::where('status', true)->where('category_id', 8)->latest()->get(); 
+        $data = Cache::remember('home_page', 600, function () {
 
-       $sliders = Article::where([['slider', true],['status', true]])->get()->map(function ($item) {
-            $item->type = 'smartnews';
-            return $item;
-        })->concat(
-            Donation::where([['slider', true],['is_active', true]])->get()->map(function ($item) {
-                $item->type = 'smartcampaign';
-                return $item;
-            })
-        )->concat(
-            Documentation::where([['slider', true],['status', true]])->get()->map(function ($item) {
-                $item->type = 'documentations';
-                return $item;
-            })
-        )->concat(
-            Release::where([['slider', true],['status', true]])->get()->map(function ($item) {
-                $item->type = 'smartreleases';
-                return $item;
-            })
+        $articles = Article::where('status', true)
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $releases = Release::where('status', true)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        $donations = Donation::where('is_active', true)
+            ->withSum('donaturs', 'total_amount') 
+            ->latest()
+            ->take(3) 
+            ->get();
+
+        $documentations = Documentation::where('status', true)
+            ->where('category_id', 8)
+            ->latest()
+            ->take(4) 
+            ->get();
+
+        $sliders = collect();
+
+        $sliders = $sliders->concat(
+            Article::where('slider', true)
+                ->where('status', true)
+                ->select('id','title','slug','cover','summary')
+                ->take(3)
+                ->get()
+                ->map(fn($item) => tap($item)->setAttribute('type','smartnews'))
         );
-        
-        return view('home', compact('articles', 'donations', 'documentations', 'releases', 'sliders'));
+
+        $sliders = $sliders->concat(
+            Donation::where('slider', true)
+                ->where('is_active', true)
+                ->select('id','name','slug','thumbnail','about')
+                ->take(3)
+                ->get()
+                ->map(fn($item) => tap($item)->setAttribute('type','smartcampaign'))
+        );
+
+        return compact(
+            'articles',
+            'releases',
+            'donations',
+            'documentations',
+            'sliders'
+        );
+    });
+
+    return view('home', $data);
     }
 
     public function about()

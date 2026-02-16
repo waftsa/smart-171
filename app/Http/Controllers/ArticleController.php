@@ -22,7 +22,7 @@ class ArticleController extends Controller
         $search = $request->query('search');
         $sortBy = $request->query('sort_by');
 
-        $query = Article::query();
+        $query = Article::query()->latest();
 
         if ($search) {
             $query->where('title', 'like', "%$search%")

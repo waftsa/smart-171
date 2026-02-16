@@ -41,6 +41,7 @@
                         <tr class="border-b">
                             <th class="px-4 py-2 text-left">Thumbnail</th>
                             <th class="px-4 py-2 text-left">Judul</th>
+                            <th class="px-4 py-2 text-left">Tanggal Dibuat</th>
                             <th class="px-4 py-2 text-left">Tanggal Diperbarui</th>
                             <th class="px-4 py-2 text-left">Status</th>
                             <th class="px-4 py-2 text-left"></th>
@@ -54,6 +55,9 @@
                             </td>
                             <td class="px-4 py-2">
                                 {{ $article->title }}
+                            </td>
+                            <td class="px-4 py-2">
+                                {{ $article->created_at->format('d M Y') }}
                             </td>
                             <td class="px-4 py-2">
                                 {{ $article->updated_at->format('d M Y') }}

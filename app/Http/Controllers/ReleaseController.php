@@ -23,7 +23,7 @@ class ReleaseController extends Controller
         $sortBy = $request->query('sort_by');
 
         // Query dasar
-        $query = Release::query();
+        $query = Release::query()->latest();
 
         // Filter berdasarkan search
         if ($search) {

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Http;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
@@ -39,7 +39,7 @@ class ServiceController extends Controller
         //
         $request->validate([
             'name' => 'required|string',
-            'contact' => 'required|integer',
+            'contact' => 'required|string',
             'message' => 'required|string',
         ]);
 
@@ -51,18 +51,13 @@ class ServiceController extends Controller
             $phone = '628' . substr($phone, 1);
         }
 
-        Service::create([
+        $newService = Service::create([
             'name' => $request->name,
             'contact' => $phone,
             'message' => $request->message,
         ]);
 
-        $serviceNotificationData = new Request([
-            'name' => $service->name,
-            'contact' => $service->contact,
-        ]);
-
-        $this->sendServiceNotification($serviceNotificationData);
+        $this->sendServiceNotification($newService);
 
         return redirect()->route('home')->with('success', 'Pesan berhasil dikirim!');
     }
@@ -70,37 +65,21 @@ class ServiceController extends Controller
     public function sendServiceNotification($service)
     {
         $adminNumber = '6287738474424';
-        $token = 'nUfewDACZgfTMstmQyvvw';
+        $token = 'nUfewDACZgfTMstmQyvv';
 
-        $messages = "🔔 *Notifikasi Website SMART171*" . PHP_EOL . PHP_EOL .
-                "Ada pesan baru masuk dari user:" . PHP_EOL .
-                "--------------------------------" . PHP_EOL .
-                "👤 *Nama:* " . $service->name . PHP_EOL .
-                "📞 *No. HP:* " . $service->contact . PHP_EOL .
-                "✉️ *Pesan:* " . $service->message . PHP_EOL .
-                "--------------------------------" . PHP_EOL .
-                "Silahkan segera hubungi user tersebut.";
+        $messages = "🔔 *Notifikasi Website SMART171*\n\n".
+                    "👤 Nama: {$service->name}\n".
+                    "📞 No HP: {$service->contact}\n".
+                    "✉️ Pesan: {$service->message}";
 
-        $curl = curl_init();
+        $response = Http::withHeaders([
+            'Authorization' => $token
+        ])->post('https://api.fonnte.com/send', [
+            'target' => $adminNumber,
+            'message' => $messages
+        ]);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.fonnte.com/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 0,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => array('target' => $number ,'message' => $messages),
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: ' . $token
-            ),
-            ));
-
-            $response = curl_exec($curl);
-
-            curl_close($curl);
+        \Log::info('Fonnte Response: '.$response->body());
     }
 
     /**

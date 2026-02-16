@@ -23,7 +23,7 @@ class DocumentationController extends Controller
     $sortBy = $request->query('sort_by');
 
     // Query dasar
-    $query = Documentation::query();
+    $query = Documentation::query()->latest();
 
     // Filter berdasarkan search
     if ($search) {

@@ -27,7 +27,7 @@ class DonaturController extends Controller
         $sortBy = $request->query('sort_by');
 
         // Query dasar
-        $query = Donatur::query();
+        $query = Donatur::query()->latest();
 
         // Filter berdasarkan search
         if ($search) {

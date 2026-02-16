@@ -53,5 +53,48 @@ class SliderController extends Controller
     
         return redirect()->route('admin.sliders.index')->with('error', 'Tipe data tidak valid.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+    if (!$request->selected) {
+        return back()->with('error', 'Tidak ada data dipilih.');
+    }
+
+    foreach ($request->selected as $item) {
+
+        [$type, $id] = explode('|', $item);
+
+        match($type) {
+            'smartnews' => Article::find($id)?->update(['slider' => false]),
+            'smartcampaign' => Donation::find($id)?->update(['slider' => false]),
+            'documentations' => Documentation::find($id)?->update(['slider' => false]),
+            'smartreleases' => Release::find($id)?->update(['slider' => false]),
+        };
+    }
+
+    return back()->with('success', 'Slider terpilih berhasil dihapus.');
+    }
+
+    public function addSlider($type, $id)
+{
+    $model = match($type) {
+        'smartnews' => Article::class,
+        'smartcampaign' => Donation::class,
+        'documentations' => Documentation::class,
+        'smartreleases' => Release::class,
+    };
+
+    $count = $model::where('slider', true)->count();
+
+    if ($count >= 2) {
+        return back()->with('error', 'Maksimal 2 slider untuk type ini.');
+    }
+
+    $model::findOrFail($id)->update(['slider' => true]);
+
+    return back()->with('success', 'Berhasil ditambahkan ke slider.');
+}
+
+
 }
 

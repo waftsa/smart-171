@@ -120,6 +120,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Route Slider
     Route::get('sliders', [SliderController::class, 'index'])->name('sliders.index');
     Route::delete('sliders/{type}/{id}', [SliderController::class, 'destroy'])->name('sliders.destroy');
+    Route::delete('sliders/bulk-delete', [SliderController::class, 'bulkDelete'])->name('sliders.bulkDelete');
 
     // Route Buletins
     Route::resource('bulletins', BuletinController::class)->except(['index']);

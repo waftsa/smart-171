@@ -25,7 +25,7 @@ class DonationController extends Controller
         $sortBy = $request->query('sort_by');
 
         // Query dasar
-        $query = Donation::query();
+        $query = Donation::query()->latest();
 
         // Filter berdasarkan search
         if ($search) {
