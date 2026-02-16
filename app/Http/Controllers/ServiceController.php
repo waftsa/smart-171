@@ -67,18 +67,19 @@ class ServiceController extends Controller
         return redirect()->route('home')->with('success', 'Pesan berhasil dikirim!');
     }
 
-    public function sendServiceNotification(Request $request)
+    public function sendServiceNotification($service)
     {
-        $messages = "Assalamu alaikum *" . $request->name . "*" . PHP_EOL . PHP_EOL .
-            "Terima kasih sudah menghubungi customer service kami via website, 
-            saat ini admin kami sedang meninjau kendala yang anda alami, mohon ditunggu 😇" . PHP_EOL . PHP_EOL .
+        $adminNumber = '6287738474424';
+        $token = 'nUfewDACZgfTMstmQyvvw';
 
-            "Wassalamu’alaikum wr. wb." . PHP_EOL . PHP_EOL .
-
-            "Salam," . PHP_EOL .
-            "SMART171";
-        $number = $request->contact;
-        $token = 'bz4HsTMiybc2ChGXUQ1V';
+        $messages = "🔔 *Notifikasi Website SMART171*" . PHP_EOL . PHP_EOL .
+                "Ada pesan baru masuk dari user:" . PHP_EOL .
+                "--------------------------------" . PHP_EOL .
+                "👤 *Nama:* " . $service->name . PHP_EOL .
+                "📞 *No. HP:* " . $service->contact . PHP_EOL .
+                "✉️ *Pesan:* " . $service->message . PHP_EOL .
+                "--------------------------------" . PHP_EOL .
+                "Silahkan segera hubungi user tersebut.";
 
         $curl = curl_init();
 

@@ -36,16 +36,16 @@
                     </button>
                     <div x-show="open" x-transition 
                         class="absolute mt-2 bg-[#1D4161]/85 rounded shadow-lg text-white w-48">
-                        <a href="{{ route('donations.list') }}" class="block px-4 py-2 hover:bg-gray-200">Smart Campaign</a>
+                        <a href="{{ route('donations.list') }}" class="block px-4 py-2 hover:bg-gray-200">Donasi</a>
                         <a href="{{ route('ota.list') }}" class="block px-4 py-2 hover:bg-gray-200">Orang Tua Asuh</a>
+                        <a href="{{ route('documentations.list') }}" class="block px-4 py-2 hover:bg-gray-200">Penyaluran</a>
                     </div>
                 </div>
 
-                <!-- Dropdown Aktivitas -->
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" @click.away="open = false"
                         class="flex items-center hover:text-white focus:outline-none">
-                        {{ __('Aktivitas') }}
+                        {{ __('Kegiatan') }}
                         <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M19 9l-7 7-7-7"></path>
@@ -53,11 +53,16 @@
                     </button>
                     <div x-show="open" x-transition 
                         class="absolute mt-2 bg-[#1D4161]/85 rounded shadow-lg text-white w-48">
-                        <a href="{{ route('articles.list') }}" class="block px-4 py-2 hover:bg-gray-200">Smart News</a>
-                        <a href="{{ route('releases.list') }}" class="block px-4 py-2 hover:bg-gray-200">Smart Releases</a>
-                        <a href="{{ route('documentations.list') }}" class="block px-4 py-2 hover:bg-gray-200">Dokumentasi</a>
+                        <a href="{{ route('donations.list') }}" class="block px-4 py-2 hover:bg-gray-200">Event</a>
+                        <a href="{{ route('ota.list') }}" class="block px-4 py-2 hover:bg-gray-200">Pres</a>
+                        <a href="{{ route('documentations.list') }}" class="block px-4 py-2 hover:bg-gray-200">Penyaluran</a>
                     </div>
                 </div>
+                
+                <a href="{{ route('articles.list') }}" class="{{ request()->routeIs('articles') ? 'font-bold' : '' }}">
+                    {{ __('Berita Palestina') }}
+                </a>
+               
             </div>
 
             <!-- Donate Button -->
