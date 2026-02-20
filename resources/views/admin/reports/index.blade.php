@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-row justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Kelola Artikel') }}
+                {{ __('Kelola Report OTA') }}
             </h2>
         </div>
     </x-slot>
@@ -13,16 +13,14 @@
                 <!-- Search Bar & Sort By -->
                 <div class="flex justify-between items-center mb-6">
                     <div class="flex items-center gap-4">
-                        <form action="{{ route('admin.articles.index') }}" method="GET" class="flex flex-wrap gap-4 items-center">
+                        <form action="{{ route('admin.reports.index') }}" method="GET" class="flex flex-wrap gap-4 items-center">
                             <input type="text" name="search" value="{{ request()->query('search') }}" 
-                                placeholder="Cari artikel..." 
+                                placeholder="Cari Nama..." 
                                 class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-700" />
                             
                             <select name="sort_by" class="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-700">
                                 <option value="newest" {{ request()->query('sort_by') == 'newest' ? 'selected' : '' }}>Terbaru</option>
                                 <option value="oldest" {{ request()->query('sort_by') == 'oldest' ? 'selected' : '' }}>Terlama</option>
-                                <option value="published" {{ request()->query('sort_by') == 'published' ? 'selected' : '' }}>Published</option>
-                                <option value="draft" {{ request()->query('sort_by') == 'draft' ? 'selected' : '' }}>Draft</option>
                             </select>
 
                             <button type="submit" class="px-4 py-2 bg-indigo-700 text-white rounded-lg hover:bg-indigo-800">
@@ -30,7 +28,7 @@
                             </button>
                         </form>
                     </div>
-                    <a href="{{ route('admin.articles.create') }}" class="font-bold py-2 px-4 bg-white border-2 border-green-700 text-green-700 rounded-lg hover:bg-green-300 hover:border-green-300">
+                    <a href="{{ route('admin.reports.create') }}" class="font-bold py-2 px-4 bg-white border-2 border-green-700 text-green-700 rounded-lg hover:bg-green-300 hover:border-green-300">
                         Add New
                     </a>
                 </div>
@@ -39,45 +37,39 @@
                 <table class="min-w-full table-auto">
                     <thead>
                         <tr class="border-b">
-                            <th class="px-4 py-2 text-left">Thumbnail</th>
-                            <th class="px-4 py-2 text-left">Judul</th>
-                            <th class="px-4 py-2 text-left">Tanggal Dibuat</th>
-                            <th class="px-4 py-2 text-left">Tanggal Diperbarui</th>
-                            <th class="px-4 py-2 text-left">Status</th>
-                            <th class="px-4 py-2 text-left"></th>
+                            <th class="px-4 py-2 text-left">Kode Unik OTA</th>
+                            <th class="px-4 py-2 text-left">Nama OTA</th>
+                            <th class="px-4 py-2 text-left">Link Flipbook</th>
+                            <th class="px-4 py-2 text-left">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($articles as $article)
+                        @forelse($reports as $report)
                         <tr class="border-b">
-                            <td class="px-4 py-2">
-                                <img src="{{ $article->cover }}" alt="{{ $article->title }}" class="w-[120px] h-[90px] object-cover rounded-lg">
+                            <td class="px-2 py-2">
+                                {{ $report->code }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ $report->name }}
                             </td>
                             <td class="px-4 py-2">
-                                {{ $article->title }}
-                            </td>
-                            <td class="px-4 py-2">
-                                {{ $article->created_at->format('d M Y') }}
-                            </td>
-                            <td class="px-4 py-2">
-                                {{ $article->updated_at->format('d M Y') }}
-                            </td>
-                            <td class="px-4 py-2">
-                                @if($article->status)
-                                    <span class="w-fit text-xs font-bold py-1 px-2 rounded-lg bg-green-300 text-green-700">PUBLISHED</span>
-                                @else
-                                    <span class="w-fit text-xs font-bold py-1 px-2 rounded-lg bg-yellow-200 text-yellow-700">DRAFT</span>
-                                @endif
+                                @php
+                                    $flipbookUrl = route('reports.show', [
+                                        'slug' => $report->slug,
+                                        'token' => $report->token
+                                    ]);
+                                @endphp
+                                {{ $flipbookUrl }}
                             </td>
                             <td class="px-4 py-8 flex gap-3">
-                                <a href="{{ route('admin.articles.edit', $article) }}" class="text-yellow-500 mt-2">
+                                <a href="{{ route('admin.reports.edit', $report) }}" class="text-yellow-500 mt-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                                     </svg>
                                 </a>
 
-                                <form action="{{ route('admin.articles.destroy', $article) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel ini?');">
+                                <form action="{{ route('admin.reports.destroy', $report) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel ini?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 mt-2">
@@ -88,7 +80,7 @@
                                     </button>
                                 </form>
 
-                                <a href="{{ route('admin.articles.show', $article) }}" class="px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold">
+                                <a href="{{ route('admin.reports.show', $report) }}" class="px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold">
                                     Detail
                                 </a>
                             </td>
@@ -96,17 +88,18 @@
                         @empty
                         <tr>
                             <td colspan="5" class="text-center py-4">
-                                Belum ada artikel saat ini.
+                                Belum ada report saat ini.
                             </td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
 
-                <div class="mt-10 flex justify-center">
-                    {{ $articles->links() }} <!-- Pagination Links -->
+                <div class="mt-5">
+                    {{ $reports->links() }} <!-- Pagination Links -->
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+

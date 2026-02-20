@@ -7,8 +7,10 @@ use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DonaturController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReleaseController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\UserArticleController;
@@ -16,6 +18,7 @@ use App\Http\Controllers\UserDocumentationController;
 use App\Http\Controllers\UserDonationController;
 use App\Http\Controllers\UserReleaseController;
 use App\Http\Controllers\UserBuletinController;
+use App\Http\Controllers\UserReportController;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Route;
 
@@ -68,11 +71,14 @@ Route::prefix('/')->group(function () {
     Route::get('smart-bulletins', [UserBuletinController::class, 'index'])->name('buletins.list');
     Route::get('smart-bulletins/filter', [UserBuletinController::class, 'filter'])->name('buletins.filter');
     Route::get('smart-bulletins/{buletin:slug}', [UserBuletinController::class, 'show'])->name('buletins.show');
+
+    Route::get('report/flipbook/{slug}/{token}', [UserReportController::class, 'showFlipbook'])->name('reports.show');
+    Route::get('reports/pdf/{slug}/{token}', [UserReportController::class, 'showPdf'])->name('reports.pdf');
 });
 
 // Route Dashboard dan Profil untuk Pengguna dengan Autentikasi
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -126,6 +132,10 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('bulletins', BuletinController::class)->except(['index']);
     Route::get('bulletins', [BuletinController::class, 'index'])->name('bulletins.index');
     Route::post('bulletins/{bulletin}/publish', [BuletinController::class, 'publish'])->name('bulletins.publish');
+
+    // Route report
+    Route::resource('reports', ReportController::class)->except(['index']);
+    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
     // Route::get('/cloudinary-signature', function () {
     //     $timestamp = time();

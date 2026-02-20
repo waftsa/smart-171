@@ -87,7 +87,11 @@
         @endauth
 
         @guest
-        @if(!Route::is('donations.confirmation') && !Route::is('donations.success'))
+       @if(
+        !Route::is('donations.confirmation') && 
+        !Route::is('donations.success') &&
+        !Route::is('reports.pdf')
+        )
             <nav id="navbar" class="w-full z-50">
                 @if(Route::is('donations.*'))
                     @include('layouts.nav-donation')

@@ -10,37 +10,90 @@
         </div>
 
         <!-- Navigation Links -->
-        <nav class="mt-16">
-            <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Dashboard') }}
+        <nav class="mt-16 space-y-1 px-2">
+            <!-- dashboard -->
+            <a href="{{ route('dashboard') }}"
+            class="block px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                Dashboard
             </a>
-            <a href="{{ route('admin.donations.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Kelola Donasi') }}
-            </a>
-            <a href="{{ route('admin.donaturs.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('List Donaturs') }}
-            </a>
-            <a href="{{ route('admin.documentations.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Dokumentasi') }}
-            </a>
-            <a href="{{ route('admin.articles.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Smart News') }}
-            </a>
-            <a href="{{ route('admin.releases.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Smart Releases') }}
-            </a>
-            <a href="{{ route('admin.bulletins.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Smart Buletin') }}
-            </a>
-            <a href="{{ route('admin.categories.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Kelola Kategorisasi') }}
-            </a>
-            <a href="{{ route('admin.services.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Customer Service') }}
-            </a>
-            <a href="{{ route('admin.sliders.index') }}" class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-                {{ __('Slider') }}
-            </a>
+             <!-- Campaign -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                    <span>Campaign</span>
+                    <svg :class="{ 'rotate-180': open }"
+                        class="w-4 h-4 transform transition-transform"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <div x-show="open" x-transition class="ml-4 mt-1 space-y-1">
+                    <a href="{{ route('admin.donations.index') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Kelola Donasi</a>
+                    <a href="{{ route('admin.donaturs.index') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Data Donatur</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Penyaluran</a>
+                </div>
+            </div>
+
+            <!-- Konten Web -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                    <span>Konten Web</span>
+                    <svg :class="{ 'rotate-180': open }"
+                        class="w-4 h-4 transform transition-transform"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <div x-show="open" x-transition class="ml-4 mt-1 space-y-1">
+                    <a href="{{ route('admin.articles.index') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">News</a>
+                    <a href="{{ route('admin.releases.index') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Releases</a>
+                </div>
+            </div>
+
+            <!-- Administrasi -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                    <span>Administrasi</span>
+                    <svg :class="{ 'rotate-180': open }"
+                        class="w-4 h-4 transform transition-transform"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <div x-show="open" x-transition class="ml-4 mt-1 space-y-1">
+                    <a href="{{ route('admin.reports.index') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Report OTA</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Kwitansi</a>
+                </div>
+            </div>
+
+            <!-- Lainnya -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open"
+                    class="w-full flex justify-between items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+                    <span>Lainnya</span>
+                    <svg :class="{ 'rotate-180': open }"
+                        class="w-4 h-4 transform transition-transform"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                <div x-show="open" x-transition class="ml-4 mt-1 space-y-1">
+                    <a href="{{ route('admin.sliders.index') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Sliders</a>
+                    <a href="{{ route('admin.services.index') }}" class="block px-4 py-2 text-sm text-gray-500 hover:text-indigo-600">Customer Service</a>
+                </div>
+            </div>
+
+            
         </nav>
 
         <!-- Logout -->
